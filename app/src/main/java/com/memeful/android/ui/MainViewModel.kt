@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.memeful.android.model.GalleryDataResponse
 import com.memeful.android.repo.ImgurRepository
 import com.memeful.android.utils.NetworkHelper
 import com.memeful.android.utils.Resource
@@ -15,8 +16,8 @@ class MainViewModel @ViewModelInject constructor(
     private val networkHelper: NetworkHelper
 ) : ViewModel() {
 
-    private val getGalleryMutableLiveData = MutableLiveData<Resource<Any>>()
-    val getGalleryLiveData: LiveData<Resource<Any>> get() = getGalleryMutableLiveData
+    private val getGalleryMutableLiveData = MutableLiveData<Resource<GalleryDataResponse>>()
+    val getGalleryLiveData: LiveData<Resource<GalleryDataResponse>> get() = getGalleryMutableLiveData
 
     init {
         fetchGallery()

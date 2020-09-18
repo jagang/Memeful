@@ -4,6 +4,8 @@ import com.memeful.android.BuildConfig
 import com.memeful.android.api.ApiHelper
 import com.memeful.android.api.ApiHelperImpl
 import com.memeful.android.api.ImgurService
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -41,7 +43,11 @@ class ApplicationModule {
         BASE_URL: String
     ): Retrofit =
         Retrofit.Builder()
-            .addConverterFactory(MoshiConverterFactory.create())
+            .addConverterFactory(
+                MoshiConverterFactory.create(
+                    Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+                )
+            )
             .baseUrl(BASE_URL)
             .client(okHttpClient)
             .build()

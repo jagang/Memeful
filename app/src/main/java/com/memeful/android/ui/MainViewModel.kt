@@ -1,0 +1,37 @@
+package com.memeful.android.ui
+
+import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.memeful.android.repo.ImgurRepository
+import com.memeful.android.utils.NetworkHelper
+import com.memeful.android.utils.Resource
+import kotlinx.coroutines.launch
+
+class MainViewModel @ViewModelInject constructor(
+    private val imgurRepository: ImgurRepository,
+    private val networkHelper: NetworkHelper
+) : ViewModel() {
+
+    private val getGalleryMutableLiveData = MutableLiveData<Resource<Any>>()
+    val getGalleryLiveData: LiveData<Resource<Any>> get() = getGalleryMutableLiveData
+
+    init {
+        fetchGallery()
+    }
+
+    private fun fetchGallery() {
+        viewModelScope.launch {
+            getGalleryMutableLiveData.postValue(Resource.loading(null))
+            if (networkHelper.isNetworkConnected()) {
+                imgurRepository.getGallery().let {
+                    if (it.isSuccessful) getGalleryMutableLiveData.postValue(Resource.success(it.body()))
+                    else getGalleryMutableLiveData.postValue(Resource.error(it.errorBody().toString(), null))
+                }
+            } else getGalleryMutableLiveData.postValue(Resource.error("No internet connection", null))
+        }
+    }
+
+}

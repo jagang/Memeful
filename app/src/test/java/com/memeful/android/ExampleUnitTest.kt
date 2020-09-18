@@ -1,4 +1,4 @@
-package com.memeful.mainactivity
+package com.memeful.android
 
 import org.junit.Test
 

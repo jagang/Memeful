@@ -1,4 +1,4 @@
-package com.memeful.mainactivity
+package com.memeful.android
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

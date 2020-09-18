@@ -14,7 +14,7 @@ import com.memeful.android.utils.Status
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), MainAdapter.OnBottomReachedListener {
 
     private val viewModel : MainViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
@@ -35,9 +35,19 @@ class MainActivity : AppCompatActivity() {
                 }
                 Status.SUCCESS -> {
                     it.data?.data?.let { listOfGalleryData ->
-                        val items = arrayListOf<GalleryData>()
-                        items.addAll(listOfGalleryData)
-                        binding.rvGallery.adapter = MainAdapter(items)
+                        if (listOfGalleryData.isEmpty().not()) {
+                            if (viewModel.pageNo - 1 == 0) {
+                                val items = arrayListOf<GalleryData>()
+                                items.addAll(listOfGalleryData)
+                                binding.rvGallery.adapter = MainAdapter(items, this)
+                            } else {
+                                (binding.rvGallery.adapter as MainAdapter).updateList(listOfGalleryData)
+                            }
+                        } else {
+                            viewModel.isLastPage = true
+                        }
+                    } ?: kotlin.run {
+                        viewModel.isLastPage = true
                     }
                     binding.pbLoader.visibility = View.GONE
                 }
@@ -56,5 +66,9 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "MainActivity"
+    }
+
+    override fun onBottomReached(position: Int) {
+        viewModel.loadNextPage()
     }
 }

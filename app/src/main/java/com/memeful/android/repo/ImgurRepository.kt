@@ -5,6 +5,6 @@ import javax.inject.Inject
 
 class ImgurRepository @Inject constructor(private val apiHelper: ApiHelper) {
 
-    suspend fun getGallery() =  apiHelper.getGallery()
+    suspend fun getGallery(pageNo: Int) =  apiHelper.getGallery(pageNo)
 
 }

@@ -4,5 +4,5 @@ import retrofit2.Response
 
 interface ApiHelper {
 
-    suspend fun getGallery(): Response<GalleryDataResponse>
+    suspend fun getGallery(pageNo: Int): Response<GalleryDataResponse>
 }

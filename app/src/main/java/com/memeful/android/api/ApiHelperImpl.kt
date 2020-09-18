@@ -6,6 +6,6 @@ import javax.inject.Inject
 
 class ApiHelperImpl @Inject constructor(private val apiService: ImgurService) : ApiHelper {
 
-    override suspend fun getGallery(): Response<GalleryDataResponse> = apiService.getGallery()
+    override suspend fun getGallery(pageNo: Int): Response<GalleryDataResponse> = apiService.getGallery(pageNo)
 
 }

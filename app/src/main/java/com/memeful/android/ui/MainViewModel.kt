@@ -19,6 +19,9 @@ class MainViewModel @ViewModelInject constructor(
     private val getGalleryMutableLiveData = MutableLiveData<Resource<GalleryDataResponse>>()
     val getGalleryLiveData: LiveData<Resource<GalleryDataResponse>> get() = getGalleryMutableLiveData
 
+    var pageNo = 0
+    var isLastPage = false
+
     init {
         fetchGallery()
     }
@@ -27,11 +30,17 @@ class MainViewModel @ViewModelInject constructor(
         viewModelScope.launch {
             getGalleryMutableLiveData.postValue(Resource.loading(null))
             if (networkHelper.isNetworkConnected()) {
-                imgurRepository.getGallery().let {
+                imgurRepository.getGallery(pageNo++).let {
                     if (it.isSuccessful) getGalleryMutableLiveData.postValue(Resource.success(it.body()))
                     else getGalleryMutableLiveData.postValue(Resource.error(it.errorBody().toString(), null))
                 }
             } else getGalleryMutableLiveData.postValue(Resource.error("No internet connection", null))
+        }
+    }
+
+    fun loadNextPage() {
+        if (isLastPage.not()) {
+            fetchGallery()
         }
     }
 
